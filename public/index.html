@@ -1,43 +1,152 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="utf-8" />
+    <!-- Favicon moderne avec SVG -->
+    <link rel="icon" href="%PUBLIC_URL%/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/apple-touch-icon.png" />
+    
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#1F2937" />
     <meta
       name="description"
-      content="Web site created using create-react-app"
+      content="L'écran total - Découvrez les derniers films, acteurs et tendances cinématographiques"
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
+    
+    <!-- PWA Meta Tags -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="L'écran total" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="L'écran total" />
+    <meta property="og:description" content="Découvrez les derniers films, acteurs et tendances cinématographiques" />
+    <meta property="og:image" content="%PUBLIC_URL%/logo512.png" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="L'écran total" />
+    <meta property="twitter:description" content="Découvrez les derniers films, acteurs et tendances cinématographiques" />
+    
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
+    <title>L'écran total</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('%PUBLIC_URL%/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+      
+      // PWA Install Prompt - Version améliorée
+      let deferredPrompt;
+      const installButton = document.getElementById('install-button');
+      const installButtonHeader = document.getElementById('install-button-header');
+      let installPromptShown = false;
+      
+      // Vérifier si l'app est déjà installée
+      function isAppInstalled() {
+        return window.matchMedia('(display-mode: standalone)').matches || 
+               window.navigator.standalone === true;
+      }
+      
+      // Fonction pour afficher les boutons d'installation
+      function showInstallButtons() {
+        if (!isAppInstalled() && deferredPrompt) {
+          if (installButton) {
+            installButton.classList.remove('hidden');
+          }
+          if (installButtonHeader) {
+            installButtonHeader.classList.remove('hidden');
+          }
+        }
+      }
+      
+      // Fonction pour cacher les boutons d'installation
+      function hideInstallButtons() {
+        if (installButton) {
+          installButton.classList.add('hidden');
+        }
+        if (installButtonHeader) {
+          installButtonHeader.classList.add('hidden');
+        }
+      }
+      
+      // Fonction d'installation
+      function handleInstall() {
+        if (deferredPrompt) {
+          hideInstallButtons();
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+              console.log('User accepted the install prompt');
+            } else {
+              console.log('User dismissed the install prompt');
+              // Réafficher les boutons après un délai si refusé
+              setTimeout(showInstallButtons, 30000);
+            }
+            deferredPrompt = null;
+          });
+        }
+      }
+      
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // Afficher les boutons après un délai pour une meilleure UX
+        if (!installPromptShown) {
+          setTimeout(() => {
+            showInstallButtons();
+            installPromptShown = true;
+          }, 5000); // Attendre 5 secondes avant de proposer l'installation
+        }
+        
+        // Ajouter les event listeners
+        if (installButton) {
+          installButton.addEventListener('click', handleInstall);
+        }
+        if (installButtonHeader) {
+          installButtonHeader.addEventListener('click', handleInstall);
+        }
+      });
+      
+      window.addEventListener('appinstalled', () => {
+        console.log('PWA was installed');
+        hideInstallButtons();
+        deferredPrompt = null;
+        
+        // Afficher une notification de succès
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification('L\'écran total installé !', {
+            body: 'L\'application est maintenant disponible sur votre écran d\'accueil.',
+            icon: '%PUBLIC_URL%/logo192.png'
+          });
+        }
+      });
+      
+      // Demander la permission pour les notifications
+      window.addEventListener('load', () => {
+        if ('Notification' in window && Notification.permission === 'default') {
+          setTimeout(() => {
+            Notification.requestPermission();
+          }, 10000);
+        }
+      });
+    </script>
   </body>
 </html>
