@@ -1,12 +1,12 @@
 #!/bin/bash
 
-echo "🚀 Déploiement pour serveur Node.js"
+echo "🚀 Déploiement pour serveur Node.js Infomaniak"
 
 # Nettoyer les anciens builds
 rm -rf build/
 rm -rf deploy/
 
-# Construire le projet React
+# Construire le projet React localement
 echo "📦 Construction du projet React..."
 npm run build
 
@@ -18,12 +18,30 @@ fi
 # Créer le dossier de déploiement
 mkdir -p deploy
 
-# Copier les fichiers nécessaires
+# Copier uniquement les fichiers nécessaires pour la production
 echo "📁 Préparation des fichiers de déploiement..."
 cp -r build/ deploy/
 cp server.js deploy/
-cp package.json deploy/
-cp package-lock.json deploy/ 2>/dev/null || true
+
+# Créer un package.json minimal pour la production
+cat > deploy/package.json << 'EOF'
+{
+  "name": "lecran-total-production",
+  "version": "1.0.0",
+  "description": "Application web de découverte cinématographique - Production",
+  "main": "server.js",
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=9.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}
+EOF
 
 # Créer l'archive de déploiement
 echo "🗜️ Création de l'archive..."
@@ -32,8 +50,12 @@ tar -czf ../deploy-nodejs.tar.gz .
 cd ..
 
 echo "✅ Déploiement prêt : deploy-nodejs.tar.gz"
-echo "📋 Instructions :"
-echo "   1. Uploadez deploy-nodejs.tar.gz sur votre serveur Infomaniak"
+echo "📋 Instructions pour Infomaniak :"
+echo "   1. Uploadez deploy-nodejs.tar.gz sur votre serveur"
 echo "   2. Extrayez l'archive"
-echo "   3. Exécutez : npm install --production"
-echo "   4. Démarrez avec : npm start"
+echo "   3. Commande de construction : npm install"
+echo "   4. Commande d'exécution : npm start"
+echo ""
+echo "🎯 Commandes exactes pour Infomaniak :"
+echo "   - Commande de construction : npm install"
+echo "   - Commande d'exécution : npm start"
