@@ -46,9 +46,14 @@ export const tmdbApi = {
       } 
     }).then(res => res.data),
 
-  // Recherche de films
-  searchMovies: (query: string, page = 1): Promise<TMDBResponse<Movie>> =>
-    api.get('/search/movie', { params: { query, page } }).then(res => res.data),
+  // Recherche de films - Utiliser axios comme les autres méthodes
+  searchMovies: (query: string, page: number = 1): Promise<TMDBResponse<Movie>> =>
+    api.get('/search/movie', { 
+      params: { 
+        query: query,
+        page: page
+      } 
+    }).then(res => res.data),
 
   // Détails d'un acteur
   getActorDetails: (actorId: number): Promise<Actor> =>
@@ -59,7 +64,7 @@ export const tmdbApi = {
     api.get(`/person/${actorId}/movie_credits`).then(res => res.data)
 };
 
-// Individual exports for direct imports
+// Exports individuels pour la compatibilité
 export const getPopularMovies = tmdbApi.getPopularMovies;
 export const getNowPlayingMovies = tmdbApi.getNowPlayingMovies;
 export const getUpcomingMovies = tmdbApi.getUpcomingMovies;

@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Movie, Actor } from '../types/tmdb';
 import { getMovieDetails, getMovieCredits } from '../services/tmdbApi';
 import { getPosterUrl, getBackdropUrl, getProfileUrl, formatRuntime } from '../utils/constants';
+import BackButton from '../components/BackButton';
 
 const MovieDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -47,6 +48,7 @@ const MovieDetail: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center cyber-grid">
         <div className="text-center">
+          <BackButton className="mb-4" />
           <h1 className="text-4xl font-retro text-neon-pink mb-4">FILM NON TROUVÉ</h1>
           <Link to="/" className="text-neon-blue hover:text-neon-pink transition-colors font-cyber">
             ← RETOUR À L'ACCUEIL
@@ -56,28 +58,36 @@ const MovieDetail: React.FC = () => {
     );
   }
 
-  const backdropUrl = getBackdropUrl(movie.backdrop_path); // peut être null
-  const posterUrl = getPosterUrl(movie.poster_path);
-
   return (
     <div className="min-h-screen cyber-grid">
-      {/* Hero Section avec backdrop */}
-      {backdropUrl && (
+      {/* Hero Section avec backdrop - masqué sur mobile */}
+      {movie.backdrop_path && (
         <div 
-          className="relative h-96 bg-cover bg-center"
-          style={{ backgroundImage: `url(${backdropUrl})` }}
+          className="relative h-96 bg-cover bg-center hidden md:block"
+          style={{ backgroundImage: `url(${getBackdropUrl(movie.backdrop_path)})` }}
         >
           <div className="absolute inset-0 bg-gradient-to-t from-retro-dark via-retro-dark/70 to-transparent"></div>
+          
+          {/* Bouton de retour positionné sur l'image */}
+          <div className="absolute top-6 left-6 z-10">
+            <BackButton className="bg-black/50 backdrop-blur-md" />
+          </div>
         </div>
       )}
-
+      
+      {/* Bouton de retour pour mobile (quand l'image est masquée) */}
+      <div className="container mx-auto px-4 pt-6 md:hidden">
+        <BackButton />
+      </div>
+      
+      {/* Contenu du film */}
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Poster */}
           <div className="lg:col-span-1">
             <div className="retro-card overflow-hidden animate-glow">
               <img 
-                src={posterUrl}
+                src={getPosterUrl(movie.poster_path)}
                 alt={movie.title}
                 className="w-full h-auto"
               />

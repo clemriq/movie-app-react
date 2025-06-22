@@ -26,6 +26,27 @@
 
 body {
   margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #000000;
+  color: #ffffff;
+}
+
+#root {
+  background-color: #000000;
+  min-height: 100vh;
+}
+
+/* Remove this invalid CSS rule */
+/* link[rel="icon"] {
+  href: url('./assets/images/logo-white.ico');
+} */
+
+body {
+  margin: 0;
   font-family: 'Amazon Ember', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: linear-gradient(135deg, var(--prime-darker) 0%, var(--prime-dark) 100%);
   color: var(--prime-text);
@@ -218,5 +239,29 @@ body {
   .prime-button {
     padding: 12px 20px;
     font-size: 14px;
+  }
+}
+
+
+/* PWA Status Bar Background pour iOS uniquement */
+@media screen and (display-mode: standalone) {
+  /* Pseudo-élément pour colorer uniquement la zone de statut */
+  html::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: env(safe-area-inset-top, 0);
+    background: #111827; /* bg-gray-900 en hex */
+    z-index: 10000;
+    pointer-events: none;
+  }
+}
+
+/* Fallback pour les appareils iOS qui ne supportent pas env() */
+@media screen and (display-mode: standalone) and (max-device-width: 768px) {
+  html::before {
+    height: 44px; /* Hauteur standard status bar iOS */
   }
 }

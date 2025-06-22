@@ -10,13 +10,13 @@ const Header: React.FC = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      window.location.href = `/movies/popular?search=${encodeURIComponent(searchQuery)}`;
+      window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
     }
   };
 
   return (
     <>
-      <header className="bg-gray-900/95 backdrop-blur-md border-b border-gray-800 sticky top-0 z-50">
+      <header className="bg-black/95 backdrop-blur-md border-b border-gray-800 sticky top-0 z-50">
         <div className="container mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center">
@@ -63,7 +63,7 @@ const Header: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Rechercher un film..."
-                  className="bg-gray-800 text-white px-3 py-2 rounded-lg border border-gray-700 focus:border-blue-500 focus:outline-none w-48 lg:w-64"
+                  className="bg-gray-800 text-white px-4 py-3 rounded-lg border border-gray-700 focus:border-blue-500 focus:outline-none w-48 lg:w-64"
                 />
               </form>
               
@@ -136,17 +136,18 @@ const Header: React.FC = () => {
                 >
                   Prochainement
                 </Link>
+                {/* Nouveau lien vers la page de recherche */}
+                <Link 
+                  to="/search" 
+                  className="text-white bg-blue-600 hover:bg-blue-700 transition-colors py-2 flex items-center gap-2 rounded-lg px-4 font-medium shadow-lg"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  Rechercher
+                </Link>
               </nav>
-              
-              <form onSubmit={handleSearch} className="mt-4 md:hidden">
-                <input 
-                  type="text" 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Rechercher..."
-                  className="bg-gray-800 text-white px-4 py-2 rounded-lg border border-gray-700 focus:border-blue-500 focus:outline-none w-full"
-                />
-              </form>
             </div>
           </div>
         </>
