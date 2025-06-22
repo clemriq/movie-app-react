@@ -4,6 +4,7 @@ import { Actor, Movie } from '../types/tmdb';
 import { getActorDetails, getActorMovies } from '../services/tmdbApi';
 import { getProfileUrl } from '../utils/constants';
 import MovieCard from '../components/MovieCard';
+import BackButton from '../components/BackButton';
 
 const ActorDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -52,6 +53,7 @@ const ActorDetail: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center cyber-grid">
         <div className="text-center">
+          <BackButton className="mb-4" />
           <h1 className="text-4xl font-retro text-neon-pink mb-4">ACTEUR NON TROUVÉ</h1>
           <Link to="/" className="text-neon-blue hover:text-neon-pink transition-colors font-cyber">
             ← RETOUR À L'ACCUEIL
@@ -61,17 +63,20 @@ const ActorDetail: React.FC = () => {
     );
   }
 
-  const profileUrl = getProfileUrl(actor.profile_path);
-
   return (
-    <div className="min-h-screen cyber-grid py-8">
+    <div className="min-h-screen cyber-grid">
+      {/* Bouton de retour en haut de la page */}
+      <div className="container mx-auto px-4 pt-6">
+        <BackButton />
+      </div>
+      
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
           {/* Photo de profil */}
           <div className="lg:col-span-1">
             <div className="retro-card overflow-hidden animate-glow">
               <img 
-                src={profileUrl}
+                src={getProfileUrl(actor.profile_path)}
                 alt={actor.name}
                 className="w-full h-auto"
               />

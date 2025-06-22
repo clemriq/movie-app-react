@@ -90,9 +90,6 @@ const Home: React.FC = () => {
                   </svg>
                   <span>Voir les détails</span>
                 </Link>
-                <button className="bg-gray-600/80 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-600 transition-colors">
-                  + Ma liste
-                </button>
               </div>
             </div>
           </div>
@@ -100,7 +97,7 @@ const Home: React.FC = () => {
       )}
 
       {/* Movie Sections */}
-      <div className="relative z-10 -mt-32">
+      <div className="relative z-10 mt-8 md:-mt-32">
         {/* Films populaires */}
         <section className="mb-12">
           <div className="container mx-auto px-6">
@@ -159,7 +156,7 @@ const Home: React.FC = () => {
         </section>
 
         {/* Genres */}
-        <section className="mb-12 bg-gradient-to-b from-transparent to-prime-dark">
+        <section className="mb-12 bg-gray-900">
           <div className="container mx-auto px-6">
             <div className="text-center mb-8">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 font-amazon-ember">
@@ -235,7 +232,7 @@ const Home: React.FC = () => {
             </div>
             
             {/* Bouton Prime Video style */}
-            <div className="text-center mt-10">
+            <div className="text-center mt-10 ">
               <Link 
                 to="/movies/popular" 
                 className="inline-flex items-center px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors"
